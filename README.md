@@ -186,15 +186,45 @@ métier restent à faire :
 
 ---
 
-## Déploiement
+## Déploiement — GitHub + Vercel
 
-Le projet est prêt pour Vercel sans configuration : `next build` passe,
-28 routes dont 21 pré-rendues en statique.
+Le dépôt est sur [github.com/mdiene/mozais](https://github.com/mdiene/mozais).
+Le projet est prêt pour Vercel sans configuration particulière : Next.js y
+est détecté automatiquement, `next build` passe, 28 routes dont 21
+pré-rendues en statique.
 
-Avant la mise en ligne :
+### Connecter Vercel au dépôt
 
-- renseigner `RESEND_API_KEY` et vérifier le domaine d'envoi (SPF, DKIM,
-  DMARC) ;
+1. Sur [vercel.com/new](https://vercel.com/new), choisir **Import Git
+   Repository** et sélectionner `mdiene/mozais`.
+2. Vercel détecte le framework Next.js tout seul — aucun réglage de build
+   à changer (`next build`, dossier `.next`, etc.).
+3. Renseigner les variables d'environnement de production (Project
+   Settings → Environment Variables), reprises de `.env.example` :
+
+   | Variable | Obligatoire | Rôle |
+   | --- | --- | --- |
+   | `NEXT_PUBLIC_SITE_URL` | Non | Domaine utilisé par le sitemap, `robots.txt` et les liens des e-mails. Sans elle, retombe sur `https://mozais.sn`. |
+   | `RESEND_API_KEY` | Non | Sans elle, le site fonctionne normalement : les e-mails sont journalisés dans les logs Vercel au lieu d'être envoyés. |
+   | `MOZAIS_FROM_EMAIL` | Non | Expéditeur des e-mails transactionnels. |
+   | `MOZAIS_REPLY_TO` | Non | Adresse de réponse. |
+   | `RESEND_AUDIENCE_ID` | Non | Audience Resend pour l'infolettre du pied de page. |
+
+   Aucune n'est strictement requise pour un premier déploiement — le site
+   se construit et se sert sans elles, les fonctionnalités liées à Resend
+   se dégradant proprement (voir [E-mails](#e-mails)).
+4. **Deploy.** Chaque push sur `main` republie automatiquement ensuite ;
+   chaque pull request reçoit son propre aperçu.
+
+### Intégration continue
+
+`.github/workflows/ci.yml` fait tourner TypeScript, ESLint et `next
+build` sur chaque push et chaque pull request vers `main` — un contrôle
+qui échoue en quelques minutes plutôt que de découvrir un build Vercel
+cassé après coup.
+
+### Avant la mise en ligne réelle
+
 - faire rédiger les CGV — `src/app/aide/[slug]/page.tsx` ne contient
   qu'un canevas ;
 - vérifier les coordonnées dans `src/components/layout/Footer.tsx` et
@@ -202,4 +232,8 @@ Avant la mise en ligne :
   valeurs d'exemple ;
 - relire les textes produits de `src/lib/products.ts` — descriptions,
   actifs, prix et avis sont des propositions rédactionnelles, à valider
-  ou remplacer par vos contenus réels.
+  ou remplacer par vos contenus réels ;
+- si `RESEND_API_KEY` est renseignée, vérifier le domaine d'envoi (SPF,
+  DKIM, DMARC) dans Resend avant le premier envoi réel ;
+- relier un domaine personnalisé dans Vercel (Project Settings →
+  Domains) et mettre à jour `NEXT_PUBLIC_SITE_URL` en conséquence.

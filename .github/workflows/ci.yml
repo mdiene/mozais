@@ -1,0 +1,32 @@
+name: CI
+
+# Contrôle avant que Vercel ne construise le même commit : plus rapide à
+# lire qu'un build Vercel raté, et bloque une pull request cassée avant
+# qu'elle n'atteigne la branche que Vercel déploie automatiquement.
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - run: npm ci
+
+      - name: Typecheck
+        run: npx tsc --noEmit
+
+      - name: Lint
+        run: npm run lint -- --max-warnings=0
+
+      - name: Build
+        run: npm run build
