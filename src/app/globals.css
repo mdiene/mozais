@@ -1,26 +1,253 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* ============================================================
+   MOZAIS — Design tokens
+   Luxe éditorial : lin crémeux, émeraude profond, or brossé.
+   ============================================================ */
+
+@theme {
+  /* — Vert Émeraude Profond — */
+  --color-emerald-deep: #1b3022;
+  --color-emerald-mid: #2a4a35;
+  --color-emerald-soft: #3d6349;
+  --color-emerald-wash: #e7ece7;
+
+  /* — Or Brossé — */
+  --color-gold: #c5a059;
+  --color-gold-bright: #d4af37;
+  --color-gold-pale: #e3cd9b;
+  --color-gold-wash: #f6efdf;
+
+  /* — Lin / Crème — */
+  --color-linen: #fbf8f5;
+  --color-linen-deep: #f4efea;
+  --color-linen-shade: #ebe3da;
+
+  /* — Brun Terreux / Melanin — */
+  --color-earth: #2e1911;
+  --color-earth-mid: #4a2c21;
+  --color-earth-soft: #7a5a4a;
+  --color-earth-muted: #a08a7c;
+
+  /* — Typographie — */
+  --font-display: var(--font-cormorant), "Cormorant Garamond", "Playfair Display", Georgia, serif;
+  --font-sans: var(--font-jakarta), "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+
+  /* — Courbes — */
+  --ease-silk: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-oil: cubic-bezier(0.65, 0, 0.35, 1);
+
+  /* — Rayons — */
+  --radius-tile: 2px;
+  --radius-soft: 6px;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+@layer base {
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    scroll-behavior: smooth;
+  }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.001ms !important;
+    }
+  }
+
+  body {
+    background-color: var(--color-linen);
+    color: var(--color-earth);
+    font-family: var(--font-sans);
+    font-feature-settings: "kern" 1, "liga" 1;
+    text-rendering: optimizeLegibility;
+  }
+
+  ::selection {
+    background-color: var(--color-emerald-deep);
+    color: var(--color-gold-pale);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-gold);
+    outline-offset: 3px;
+    border-radius: 1px;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-display);
+    font-weight: 300;
+    letter-spacing: -0.015em;
+    line-height: 1.05;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@layer components {
+  /* Étiquette petite capitale — la voix « éditoriale » du site */
+  .eyebrow {
+    font-family: var(--font-sans);
+    font-size: 0.6875rem;
+    font-weight: 500;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--color-earth-soft);
+  }
+
+  /* Filet or, séparateur de section */
+  .rule-gold {
+    height: 1px;
+    background: linear-gradient(
+      to right,
+      transparent,
+      var(--color-gold) 12%,
+      var(--color-gold) 88%,
+      transparent
+    );
+    opacity: 0.55;
+  }
+
+  /* Trait souligné qui se dessine au survol */
+  .link-draw {
+    position: relative;
+    display: inline-block;
+  }
+  .link-draw::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -3px;
+    width: 100%;
+    height: 1px;
+    background-color: currentColor;
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 0.55s var(--ease-silk);
+  }
+  .link-draw:hover::after,
+  .link-draw:focus-visible::after {
+    transform: scaleX(1);
+    transform-origin: left;
+  }
+
+  /* Grain fin — empêche les aplats crème de paraître plats/numériques */
+  .grain::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1;
+    opacity: 0.5;
+    mix-blend-mode: multiply;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.055'/%3E%3C/svg%3E");
+  }
+
+  /* Texture lin tissée, très discrète */
+  .weave {
+    background-image:
+      repeating-linear-gradient(
+        90deg,
+        rgba(46, 25, 17, 0.018) 0px,
+        rgba(46, 25, 17, 0.018) 1px,
+        transparent 1px,
+        transparent 3px
+      ),
+      repeating-linear-gradient(
+        0deg,
+        rgba(46, 25, 17, 0.018) 0px,
+        rgba(46, 25, 17, 0.018) 1px,
+        transparent 1px,
+        transparent 3px
+      );
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+  .text-pretty {
+    text-wrap: pretty;
+  }
+
+  /* Réveil au scroll — piloté par IntersectionObserver (useReveal) */
+  .reveal {
+    opacity: 0;
+    transform: translateY(18px);
+    transition:
+      opacity 0.9s var(--ease-silk),
+      transform 0.9s var(--ease-silk);
+  }
+  .reveal[data-shown="true"] {
+    opacity: 1;
+    transform: none;
+  }
+
+
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    scrollbar-width: none;
+  }
+}
+
+/* Sans JavaScript, l'IntersectionObserver ne tourne jamais : sans cette
+   règle, tout le contenu en .reveal resterait invisible. */
+@media (scripting: none) {
+  .reveal {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* ============================================================
+   Keyframes — tiroir panier & fondus
+   ============================================================ */
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes fadeOut {
+  from { opacity: 1; }
+  to   { opacity: 0; }
+}
+
+@keyframes slideIn {
+  from { transform: translateX(100%); }
+  to   { transform: translateX(0); }
+}
+
+@keyframes slideOut {
+  from { transform: translateX(0); }
+  to   { transform: translateX(100%); }
+}
+
+@keyframes riseIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* Gouttes d'huile en suspension — dérive lente, jamais synchrone */
+@keyframes drift {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) rotate(-2deg);
+    opacity: 0.75;
+  }
+  50% {
+    transform: translate3d(6px, 22px, 0) rotate(3deg);
+    opacity: 1;
+  }
 }
