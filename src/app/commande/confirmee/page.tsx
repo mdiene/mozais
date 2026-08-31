@@ -50,7 +50,7 @@ export default async function ConfirmeePage({
       )}
 
       <p className="mx-auto mt-7 max-w-lg text-[15px] leading-[1.8] text-earth-soft text-pretty">
-        Votre commande part de l&apos;atelier de Sacré-Cœur 3. Conservez la
+        Votre commande part de l&apos;atelier de Guédiawaye. Conservez la
         référence ci-dessus : elle nous permet de retrouver votre dossier
         immédiatement.
       </p>

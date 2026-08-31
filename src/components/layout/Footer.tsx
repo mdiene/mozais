@@ -54,14 +54,14 @@ export function Footer() {
             <div className="mt-7 space-y-2.5 text-[13px] text-linen/55">
               <p className="flex items-start gap-2.5">
                 <MapPin size={14} strokeWidth={1.25} className="mt-0.5 shrink-0 text-gold" />
-                Sacré-Cœur 3, Dakar, Sénégal
+                68, Villa Cité Adama Diop, Golf Nord, Guédiawaye, Sénégal
               </p>
               <a
-                href="tel:+221338000000"
+                href="tel:+221788353636"
                 className="flex items-center gap-2.5 transition-colors hover:text-gold-pale"
               >
                 <Phone size={14} strokeWidth={1.25} className="shrink-0 text-gold" />
-                +221 33 800 00 00
+                +221 78 835 36 36
               </a>
               <a
                 href="mailto:bonjour@mozais.sn"

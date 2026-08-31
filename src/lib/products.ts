@@ -876,10 +876,18 @@ export const PRODUCTS: Product[] = [
 
   /* ============================================================
      Encens et essences sur charbon — ouvre le 31/08/2026 avec ces
-     deux références. La photo initialement prévue pour la seconde
-     montrait une marque tierce (Durance) en évidence sur chaque
-     pièce ; elle a été écartée sans y être ni floutée ni recadrée,
-     et remplacée par ce mélange de thiouraye traditionnel.
+     deux références.
+
+     TODO (placeholder assumé) : le bloc « Le geste » de la fiche
+     thiouraye utilise provisoirement la photo fournie montrant un
+     brûle-parfum sur braise à côté d'une brume et d'une bougie de
+     marque tierce (Durance) clairement lisible sur les étiquettes.
+     Intégrée à la demande explicite du 31/08/2026 (« en attendant,
+     je la modifierai plus tard ») — le recadrage n'exclut pas les
+     étiquettes, la scène entière ayant été demandée telle quelle.
+     À remplacer par une photo maison dès qu'elle existe : présenter
+     durablement le produit d'un tiers sur une fiche MOZAIS reste un
+     risque de marque à ne pas laisser traîner en production.
      ============================================================ */
   {
     slug: "encens-thiouraye",
@@ -891,6 +899,11 @@ export const PRODUCTS: Product[] = [
     featured: true,
     description:
       "L'encens le plus ancien de la maison — un mélange de copeaux de bois et de résines parfumées, tel qu'on le brûle à Dakar depuis des générations pour accueillir un hôte ou parfumer un boubou avant une cérémonie. Sur braise, il dégage une fumée dense et enveloppante, loin des bâtonnets fins vendus ailleurs.",
+    lifestyle: {
+      image: "/editorial/encens-brule-parfum.jpg",
+      alt: "Thiouraye brûlant sur charbon dans un brûle-parfum, volute de fumée montante",
+      caption: "« On fait circuler le tissu dans la fumée — jamais l'inverse. »",
+    },
     skinConcerns: ["Ambiance", "Tradition", "Réception"],
     actives: [
       {

@@ -35,8 +35,8 @@ export function OriginBlock() {
               </p>
               <div className="rule-gold mx-auto mt-7 w-32" />
               <p className="mt-7 max-w-xs text-[13px] leading-relaxed text-linen/55">
-                Atelier de Sacré-Cœur 3, Dakar. Chaque pain porte son numéro de
-                lot et sa date de coulage.
+                Atelier de Golf Nord, Guédiawaye. Chaque pain porte son
+                numéro de lot et sa date de coulage.
               </p>
             </div>
           </div>

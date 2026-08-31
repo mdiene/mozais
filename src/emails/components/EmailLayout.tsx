@@ -136,7 +136,7 @@ export function EmailLayout({
                 color: palette.earthMuted,
               }}
             >
-              MOZAIS · Sacré-Cœur 3, Dakar, Sénégal
+              MOZAIS · Guédiawaye, Sénégal
               <br />
               <Link
                 href="mailto:bonjour@mozais.sn"
