@@ -542,7 +542,7 @@ export const PRODUCTS: Product[] = [
     name: "Élixir Cuir Chevelu Neem & Ricin",
     tagline: "Assainit, densifie, apaise les démangeaisons",
     category: "capillaire",
-    image: "/products/elixir-neem-ricin.svg",
+    image: "/products/elixir-neem-ricin.jpg",
     tone: "emerald",
     featured: true,
     description:
@@ -644,7 +644,7 @@ export const PRODUCTS: Product[] = [
     name: "Huile Essentielle de Neem",
     tagline: "Concentré purifiant, à diluer",
     category: "huiles-essentielles",
-    image: "/products/huile-essentielle-neem.svg",
+    image: "/products/huile-essentielle-neem.jpg",
     tone: "emerald",
     description:
       "Un concentré à respecter. Le neem s'utilise dilué, quelques gouttes dans une huile végétale ou un masque capillaire, pour renforcer l'action assainissante d'un soin. Puissant sur les peaux à imperfections tenaces et les cuirs chevelus à pellicules.",

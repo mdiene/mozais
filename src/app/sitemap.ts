@@ -6,7 +6,7 @@ const BASE = process.env.NEXT_PUBLIC_SITE_URL ?? "https://mozais.sn";
 export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date();
 
-  const statics = ["", "/boutique", "/rituels", "/maison"].map((path) => ({
+  const statics = ["", "/boutique", "/rituels", "/senteurs", "/maison"].map((path) => ({
     url: `${BASE}${path}`,
     lastModified: now,
     changeFrequency: "weekly" as const,

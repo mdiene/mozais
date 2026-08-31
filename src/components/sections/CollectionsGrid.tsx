@@ -14,8 +14,8 @@ import { getByCategory, publishedCategories } from "@/lib/products";
 const COVER: Record<string, string> = {
   savons: "/products/hydra-karite-miel.jpg",
   skincare: "/products/perfect-skin.jpg",
-  capillaire: "/products/elixir-neem-ricin.svg",
-  "huiles-essentielles": "/products/huile-essentielle-neem.svg",
+  capillaire: "/products/elixir-neem-ricin.jpg",
+  "huiles-essentielles": "/products/huile-essentielle-neem.jpg",
   "huiles-bien-etre": "/products/huile-baobab.svg",
   bougies: "/products/bougie-vetiver-fume.jpg",
   "parfums-ambiance": "/products/parfum-rose-de-saba.jpg",
