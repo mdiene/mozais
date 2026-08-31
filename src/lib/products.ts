@@ -99,8 +99,8 @@ export const CATEGORIES: Category[] = [
     name: "Encens et essences",
     title: "Encens et essences sur charbon",
     blurb:
-      "Résines et bâtonnets, brûlés sur charbon — le geste rituel le plus proche de ceux déjà sur le site.",
-    published: false,
+      "Thiouraye et résines, brûlés sur charbon — le geste rituel le plus proche de ceux déjà sur le site.",
+    // Publiée le 31/08/2026 : 2 références prêtes (seuil minimum atteint).
   },
 ];
 
@@ -450,7 +450,7 @@ export const PRODUCTS: Product[] = [
     line: "Mozais Hydra",
     tagline: "Unifiant & illuminateur",
     category: "savons",
-    image: "/products/hydra-curcuma-miel.svg",
+    image: "/products/hydra-curcuma-miel.jpg",
     tone: "gold",
     description:
       "Un pain jaune safrané pour travailler l'uniformité du teint sans aucun agent éclaircissant. Le curcuma agit sur l'inflammation qui entretient les taches, le miel adoucit. Une alternative honnête aux savons dits « clarifiants ».",
@@ -489,7 +489,7 @@ export const PRODUCTS: Product[] = [
     name: "Huile de Baobab",
     tagline: "Élixir corps & visage, pression à froid",
     category: "huiles-bien-etre",
-    image: "/products/huile-baobab.svg",
+    image: "/products/huile-baobab.jpg",
     tone: "gold",
     featured: true,
     badge: "Pressée à froid",
@@ -681,7 +681,7 @@ export const PRODUCTS: Product[] = [
     name: "Le Rituel Perfect Skin",
     tagline: "Coffret trois gestes — purifier, traiter, nourrir",
     category: "skincare",
-    image: "/products/rituel-perfect-skin.svg",
+    image: "/products/rituel-perfect-skin.jpg",
     tone: "emerald",
     featured: true,
     badge: "Coffret",
@@ -871,6 +871,90 @@ export const PRODUCTS: Product[] = [
       "Ne pas ingérer, ne pas appliquer sur la peau.",
     ],
     variants: [{ id: "duo", label: "Duo brume + diffuseur", price: 15500, inStock: true }],
+    reviews: [],
+  },
+
+  /* ============================================================
+     Encens et essences sur charbon — ouvre le 31/08/2026 avec ces
+     deux références. La photo initialement prévue pour la seconde
+     montrait une marque tierce (Durance) en évidence sur chaque
+     pièce ; elle a été écartée sans y être ni floutée ni recadrée,
+     et remplacée par ce mélange de thiouraye traditionnel.
+     ============================================================ */
+  {
+    slug: "encens-thiouraye",
+    name: "Thiouraye",
+    tagline: "Encens traditionnel sénégalais, à braise",
+    category: "encens",
+    image: "/products/encens-thiouraye.jpg",
+    tone: "earth",
+    featured: true,
+    description:
+      "L'encens le plus ancien de la maison — un mélange de copeaux de bois et de résines parfumées, tel qu'on le brûle à Dakar depuis des générations pour accueillir un hôte ou parfumer un boubou avant une cérémonie. Sur braise, il dégage une fumée dense et enveloppante, loin des bâtonnets fins vendus ailleurs.",
+    skinConcerns: ["Ambiance", "Tradition", "Réception"],
+    actives: [
+      {
+        name: "Copeaux de bois parfumés",
+        role: "La base du mélange — dense, elle brûle lentement et longtemps sur la braise.",
+      },
+      { name: "Résines naturelles", role: "Fixent le parfum et l'intensifient à la chaleur du charbon." },
+    ],
+    ritual: [
+      {
+        title: "Allumer le charbon d'abord",
+        detail: "Laisser le charbon devenir incandescent avant d'y déposer le thiouraye — jamais l'inverse.",
+      },
+      {
+        title: "Une pincée suffit",
+        detail: "Déposer une petite quantité sur la braise ; le mélange est dense et se consume lentement.",
+      },
+      {
+        title: "Passer le tissu au-dessus",
+        detail:
+          "Le geste traditionnel : on fait circuler le boubou ou le tissu dans la fumée plutôt que de simplement parfumer la pièce.",
+      },
+    ],
+    precautions: [
+      "Utiliser uniquement sur un charbon dédié à l'encens, dans un brûle-parfum stable et ininflammable.",
+      "Toujours dans une pièce ventilée — ne jamais laisser sans surveillance.",
+      "Hors de portée des enfants : le charbon reste brûlant longtemps après l'extinction de la flamme visible.",
+    ],
+    variants: [{ id: "100g", label: "100 g", price: 8000, inStock: true }],
+    reviews: [],
+  },
+  {
+    slug: "encens-pastilles-santal",
+    name: "Pastilles de Résine Santal",
+    tagline: "Pastilles à braise, format découverte",
+    category: "encens",
+    image: "/products/encens-fondants-santal.jpg",
+    tone: "gold",
+    description:
+      "Des pastilles de résine compressée, plus simples à doser qu'un mélange en vrac — une pincée de braise suffit à en faire fondre le parfum. Le santal y domine, chaud et laiteux, pensé pour qui découvre l'encens sur charbon.",
+    skinConcerns: ["Ambiance", "Découverte", "Registre boisé"],
+    actives: [
+      {
+        name: "Résine de santal compressée",
+        role: "Se consume proprement, sans à-coups, contrairement à un mélange en copeaux.",
+      },
+    ],
+    ritual: [
+      {
+        title: "Une pastille par braise",
+        detail: "Ne pas superposer plusieurs pastilles — une seule suffit pour une diffusion complète.",
+      },
+      {
+        title: "Laisser fondre, ne pas souffler",
+        detail:
+          "La pastille se consume d'elle-même sur la braise ; souffler dessus disperse la fumée sans l'intensifier.",
+      },
+    ],
+    precautions: [
+      "Utiliser uniquement sur un charbon dédié à l'encens, dans un brûle-parfum stable et ininflammable.",
+      "Toujours dans une pièce ventilée — ne jamais laisser sans surveillance.",
+      "Hors de portée des enfants et des animaux.",
+    ],
+    variants: [{ id: "12pc", label: "Boîte de 12 pastilles", price: 7500, inStock: true }],
     reviews: [],
   },
 ];

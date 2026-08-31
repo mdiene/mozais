@@ -24,10 +24,10 @@ const MATERIALS = [
     hue: "bg-gold-wash",
   },
   {
-    name: "Oliban",
-    latin: "Boswellia sacra",
-    origin: "Résine, Corne de l'Afrique",
-    role: "La matière la plus ancienne du rituel — brûlée sur charbon depuis des millénaires. Une fumée blanche, légèrement citronnée, qui purifie plus qu'elle ne parfume.",
+    name: "Thiouraye",
+    latin: "Mélange traditionnel",
+    origin: "Recette, Dakar",
+    role: "Le mélange de copeaux et de résines que l'on brûle au Sénégal depuis des générations, pour un hôte ou avant une cérémonie. Une fumée dense qui imprègne le tissu, pas seulement l'air de la pièce.",
     hue: "bg-linen-shade",
   },
   {
@@ -39,15 +39,17 @@ const MATERIALS = [
   },
 ];
 
-/** Les trois sous-catégories de l'univers, dans leur état réel du
- *  catalogue — y compris celle qui n'a pas encore ouvert. */
+/** Les trois sous-catégories de l'univers. Le badge "Bientôt" du bloc
+ *  ci-dessous reste géré dynamiquement via `published` — utile si un
+ *  futur rayon (Soins de régénération, etc.) rejoint ce gabarit avant
+ *  d'avoir ses deux références minimum. */
 const SUBCATEGORIES = ["bougies", "parfums-ambiance", "encens"] as const;
 
 export default function SenteursPage() {
   const subcategories = SUBCATEGORIES.map((slug) => getCategory(slug)).filter(
     (c): c is NonNullable<typeof c> => Boolean(c),
   );
-  const products = [...getByCategory("bougies"), ...getByCategory("parfums-ambiance")];
+  const products = SUBCATEGORIES.flatMap((slug) => getByCategory(slug));
 
   const breadcrumb = breadcrumbJsonLd([
     { name: "Accueil", href: "/" },
@@ -113,7 +115,7 @@ export default function SenteursPage() {
           index="01"
           eyebrow="Les rayons"
           title="Trois façons de parfumer une pièce."
-          intro="Deux sont déjà en boutique. Le troisième attend une deuxième référence prête — nous n'ouvrons jamais un rayon à une seule pièce."
+          intro="Les trois rayons sont ouverts, chacun avec au moins deux références — nous n'ouvrons jamais un rayon à une seule pièce."
         />
 
         <div className="mt-14 grid gap-px bg-earth/10 md:grid-cols-3">
@@ -161,7 +163,7 @@ export default function SenteursPage() {
             <SectionHeading
               index="02"
               eyebrow="Déjà en boutique"
-              title="Les deux rayons ouverts."
+              title="Les trois rayons ouverts."
               href="/boutique"
               hrefLabel="Toute la boutique"
             />
@@ -207,11 +209,13 @@ export default function SenteursPage() {
       <section className="border-t border-earth/10 bg-linen-deep py-20 text-center md:py-28">
         <div className="mx-auto max-w-2xl px-5">
           <h2 className="font-display text-[clamp(1.9rem,4vw,2.9rem)] font-light leading-[1.05] text-emerald-deep text-balance">
-            Encens et essences sur charbon ouvre bientôt.
+            Le geste du thiouraye ne date pas d&apos;hier.
           </h2>
           <p className="mx-auto mt-5 max-w-lg text-[15px] leading-[1.8] text-earth-soft text-pretty">
-            Une deuxième référence est en préparation. Le rayon ouvre dès
-            qu&apos;il compte au moins deux pièces — pas avant.
+            Faire circuler un tissu dans la fumée pour accueillir un hôte,
+            c&apos;est une habitude sénégalaise bien plus ancienne que la
+            maison elle-même. Senteurs ne l&apos;invente pas — il lui donne
+            simplement une place dans le catalogue.
           </p>
           <Button asChild variant="outline" size="lg" className="mt-8">
             <Link href="/boutique">

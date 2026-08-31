@@ -87,8 +87,11 @@ export function SmokeTrailCanvas({
 
     /* ---------- Réglages ---------- */
     const isCoarse = window.matchMedia("(pointer: coarse)").matches;
-    const MAX = Math.round((isCoarse ? 90 : 190) * density);
-    const AMBIENT_RATE = (isCoarse ? 2.2 : 3.4) * density;
+    // Chaque filet est très diaphane (voir draw()) : il en faut beaucoup
+    // en superposition pour lire comme une volute continue plutôt que
+    // comme des traits épars.
+    const MAX = Math.round((isCoarse ? 150 : 320) * density);
+    const AMBIENT_RATE = (isCoarse ? 4 : 6) * density;
 
     const wisps: Wisp[] = [];
 
@@ -139,27 +142,44 @@ export function SmokeTrailCanvas({
       });
     };
 
-    /* ---------- Rendu d'une volute ---------- */
+    /* ---------- Rendu d'une volute ----------
+       Une bulle est ronde et nette ; la fumée est un filet allongé dans
+       le sens où l'air la pousse. Chaque particule est donc étirée le
+       long de son propre vecteur vitesse — jamais un simple cercle
+       agrandi — et reste très diaphane : c'est la superposition de
+       nombreux filets fins qui doit lire comme une volute continue,
+       pas la présence d'un seul filet épais. */
     const draw = (wisp: Wisp) => {
       const t = wisp.age / wisp.life;
       // Apparition rapide, dissolution longue — la fumée s'efface en
       // s'étirant, elle ne disparaît jamais d'un coup.
-      const alpha = t < 0.1 ? t / 0.1 : t > 0.45 ? 1 - (t - 0.45) / 0.55 : 1;
-      const a = Math.max(0, Math.min(1, alpha)) * (wisp.ambient ? 0.34 : 0.46);
-      if (a <= 0.008 || wisp.r < 0.4) return;
+      const alpha = t < 0.12 ? t / 0.12 : t > 0.4 ? 1 - (t - 0.4) / 0.6 : 1;
+      const a = Math.max(0, Math.min(1, alpha)) * (wisp.ambient ? 0.16 : 0.22);
+      if (a <= 0.006 || wisp.r < 0.4) return;
 
       const { x, y, r } = wisp;
 
-      const body = ctx.createRadialGradient(x, y, 0, x, y, r);
-      body.addColorStop(0, `hsla(${wisp.hue}, 22%, 88%, ${a})`);
-      body.addColorStop(0.5, `hsla(${wisp.hue}, 16%, 76%, ${a * 0.55})`);
-      body.addColorStop(1, `hsla(${wisp.hue}, 10%, 60%, 0)`);
+      // Orientation le long du déplacement réel — c'est ce qui fait
+      // « couler » la fumée au lieu de la laisser flotter en rond.
+      const speed = Math.hypot(wisp.vx, wisp.vy);
+      const angle = speed > 0.015 ? Math.atan2(wisp.vy, wisp.vx) : -Math.PI / 2;
+      // Plus le filet va vite, plus il s'étire — jusqu'à 4x son rayon.
+      const stretch = 1.6 + Math.min(speed * 3.4, 2.8);
+
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.rotate(angle + Math.PI / 2);
+
+      const body = ctx.createRadialGradient(0, 0, 0, 0, 0, r * stretch);
+      body.addColorStop(0, `hsla(${wisp.hue}, 18%, 90%, ${a})`);
+      body.addColorStop(0.4, `hsla(${wisp.hue}, 14%, 80%, ${a * 0.5})`);
+      body.addColorStop(1, `hsla(${wisp.hue}, 8%, 65%, 0)`);
       ctx.fillStyle = body;
 
-      // Légèrement étirée à la verticale : une volute, pas une bulle.
       ctx.beginPath();
-      ctx.ellipse(x, y, r * 0.82, r * 1.15, 0, 0, TAU);
+      ctx.ellipse(0, 0, r * 0.5, r * stretch, 0, 0, TAU);
       ctx.fill();
+      ctx.restore();
     };
 
     /* ---------- Boucle ---------- */
@@ -217,8 +237,10 @@ export function SmokeTrailCanvas({
         }
 
         wisp.r += (wisp.rTarget - wisp.r) * Math.min(1, dt * 5);
-        // Diffusion : grossit doucement tout au long de la montée.
-        wisp.r += dt * 3.5;
+        // Diffusion : grossit doucement tout au long de la montée, mais
+        // plafonne — l'élongation (voir draw()) fait le reste du travail
+        // visuel, un rayon trop grand redonnerait un rond, pas un filet.
+        wisp.r = Math.min(wisp.r + dt * 1.6, wisp.rTarget * 1.8);
 
         const t = wisp.age / wisp.life;
 

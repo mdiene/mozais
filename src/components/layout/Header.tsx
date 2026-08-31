@@ -42,10 +42,12 @@ export function Header() {
 
   return (
     <>
-      {/* Bandeau d'annonce */}
+      {/* Bandeau d'annonce — porte le principe fondateur plutôt qu'une
+          info logistique : la livraison a sa place dans le panier et
+          sur les fiches produit, pas ici. */}
       <div className="bg-emerald-deep text-center">
         <p className="px-4 py-2.5 text-[10px] font-medium uppercase tracking-[0.24em] text-gold-pale">
-          Livraison offerte dès 25 000 F CFA · Dakar en 24 h
+          Notre principe : jamais d&apos;agent éclaircissant. Jamais.
         </p>
       </div>
 

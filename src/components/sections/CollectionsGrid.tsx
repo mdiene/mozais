@@ -6,19 +6,20 @@ import { SectionHeading } from "@/components/sections/SectionHeading";
 import { getByCategory, publishedCategories } from "@/lib/products";
 
 /**
- * Visuel de tête par collection — la première fiche de la catégorie.
- * L'ancienne entrée "huiles" est devenue deux catégories (fusion du
- * 30/08/2026), et Senteurs ouvre ses deux premiers rayons le
- * 31/08/2026 : la grille passe de 4 à 7 tuiles au total.
+ * Visuel de tête par collection. Certaines entrées pointent vers une
+ * photo de groupe dédiée (composée exprès pour représenter le rayon)
+ * plutôt que vers la photo d'un produit unique — Encens ouvre ici avec
+ * ses deux références, la grille passe à 8 tuiles.
  */
 const COVER: Record<string, string> = {
   savons: "/products/hydra-karite-miel.jpg",
   skincare: "/products/perfect-skin.jpg",
-  capillaire: "/products/elixir-neem-ricin.jpg",
+  capillaire: "/products/capillaire-collection.jpg",
   "huiles-essentielles": "/products/huile-essentielle-neem.jpg",
-  "huiles-bien-etre": "/products/huile-baobab.svg",
+  "huiles-bien-etre": "/products/huiles-elixirs-collection.jpg",
   bougies: "/products/bougie-vetiver-fume.jpg",
   "parfums-ambiance": "/products/parfum-rose-de-saba.jpg",
+  encens: "/products/encens-thiouraye.jpg",
 };
 
 export function CollectionsGrid() {
