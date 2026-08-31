@@ -3,7 +3,7 @@
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import { useCallback, useState } from "react";
 import { SlidersHorizontal, X } from "lucide-react";
-import { CATEGORIES } from "@/lib/products";
+import { publishedCategories } from "@/lib/products";
 import { cn } from "@/lib/utils";
 
 export const SORTS = [
@@ -54,7 +54,7 @@ export function CatalogFilters({ concerns }: { concerns: string[] }) {
           >
             Tout
           </FacetChip>
-          {CATEGORIES.map((c) => (
+          {publishedCategories().map((c) => (
             <FacetChip
               key={c.slug}
               active={activeCategory === c.slug}
@@ -129,7 +129,7 @@ export function CatalogFilters({ concerns }: { concerns: string[] }) {
                 >
                   Tout
                 </FacetChip>
-                {CATEGORIES.map((c) => (
+                {publishedCategories().map((c) => (
                   <FacetChip
                     key={c.slug}
                     active={activeCategory === c.slug}

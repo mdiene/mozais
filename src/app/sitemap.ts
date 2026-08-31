@@ -1,5 +1,5 @@
 import type { MetadataRoute } from "next";
-import { CATEGORIES, PRODUCTS } from "@/lib/products";
+import { PRODUCTS, publishedCategories } from "@/lib/products";
 
 const BASE = process.env.NEXT_PUBLIC_SITE_URL ?? "https://mozais.sn";
 
@@ -20,7 +20,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.9,
   }));
 
-  const collections = CATEGORIES.map((c) => ({
+  const collections = publishedCategories().map((c) => ({
     url: `${BASE}/boutique?categorie=${c.slug}`,
     lastModified: now,
     changeFrequency: "weekly" as const,

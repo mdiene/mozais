@@ -251,3 +251,14 @@
     opacity: 1;
   }
 }
+
+/* Accordéon Précautions — Radix pose --radix-accordion-content-height
+   lui-même à chaque ouverture, calculée sur le contenu réel. */
+@keyframes accordion-down {
+  from { height: 0; }
+  to   { height: var(--radix-accordion-content-height); }
+}
+@keyframes accordion-up {
+  from { height: var(--radix-accordion-content-height); }
+  to   { height: 0; }
+}

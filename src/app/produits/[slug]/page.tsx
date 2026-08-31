@@ -4,6 +4,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Leaf, PackageCheck, ShieldCheck, Truck } from "lucide-react";
 import { AddToCart } from "@/components/commerce/AddToCart";
+import { Precautions } from "@/components/commerce/Precautions";
 import { ProductCard } from "@/components/commerce/ProductCard";
 import { Reveal } from "@/components/ui/Reveal";
 import { Stars } from "@/components/ui/Stars";
@@ -15,6 +16,7 @@ import {
   getProduct,
 } from "@/lib/products";
 import { formatPrice, CURRENCY } from "@/lib/utils";
+import { breadcrumbJsonLd } from "@/lib/seo";
 
 type Params = Promise<{ slug: string }>;
 
@@ -99,11 +101,26 @@ export default async function ProductPage({ params }: { params: Params }) {
     }),
   };
 
+  /* Fil d'Ariane — mêmes libellés et mêmes chemins que le <nav> plus bas,
+     jamais une copie qui pourrait diverger. */
+  const breadcrumb = breadcrumbJsonLd([
+    { name: "Accueil", href: "/" },
+    { name: "Boutique", href: "/boutique" },
+    ...(category
+      ? [{ name: category.name, href: `/boutique?categorie=${category.slug}` }]
+      : []),
+    { name: product.name, href: `/produits/${product.slug}` },
+  ]);
+
   return (
     <>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumb) }}
       />
 
       {/* — Achat — */}
@@ -212,6 +229,8 @@ export default async function ProductPage({ params }: { params: Params }) {
                 </li>
               ))}
             </ul>
+
+            {product.precautions && <Precautions items={product.precautions} />}
           </div>
         </div>
       </section>
@@ -251,6 +270,27 @@ export default async function ProductPage({ params }: { params: Params }) {
           </dl>
         </div>
       </section>
+
+      {/* — Geste — */}
+      {product.lifestyle && (
+        <section className="mx-auto max-w-[1440px] px-5 py-20 md:px-10 md:py-28">
+          <Reveal className="flex flex-col items-center text-center">
+            <p className="eyebrow">Le geste</p>
+            <div className="relative mt-8 aspect-4/5 w-full max-w-md overflow-hidden">
+              <Image
+                src={product.lifestyle.image}
+                alt={product.lifestyle.alt}
+                fill
+                sizes="(min-width: 768px) 28rem, 90vw"
+                className="object-cover"
+              />
+            </div>
+            <p className="mt-8 max-w-md font-display text-2xl font-light italic leading-snug text-earth text-balance">
+              {product.lifestyle.caption}
+            </p>
+          </Reveal>
+        </section>
+      )}
 
       {/* — Rituel — */}
       <section className="mx-auto max-w-[1440px] px-5 py-24 md:px-10 md:py-32">

@@ -3,14 +3,20 @@ import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import { Reveal } from "@/components/ui/Reveal";
 import { SectionHeading } from "@/components/sections/SectionHeading";
-import { CATEGORIES, getByCategory } from "@/lib/products";
+import { getByCategory, publishedCategories } from "@/lib/products";
 
-/** Visuel de tête par collection — la première fiche de la catégorie. */
+/**
+ * Visuel de tête par collection — la première fiche de la catégorie.
+ * L'ancienne entrée "huiles" est devenue deux catégories (fusion du
+ * 30/08/2026) : la grille passe donc de 4 à 5 tuiles ici, seul effet
+ * visible de la phase 2 — tout le reste du site est inchangé.
+ */
 const COVER: Record<string, string> = {
   savons: "/products/hydra-karite-miel.jpg",
   skincare: "/products/perfect-skin.jpg",
   capillaire: "/products/elixir-neem-ricin.svg",
-  huiles: "/products/huile-baobab.svg",
+  "huiles-essentielles": "/products/huile-essentielle-neem.svg",
+  "huiles-bien-etre": "/products/huile-baobab.svg",
 };
 
 export function CollectionsGrid() {
@@ -30,7 +36,7 @@ export function CollectionsGrid() {
       />
 
       <div className="mt-14 grid gap-px bg-earth/10 md:grid-cols-2">
-        {CATEGORIES.map((category, i) => {
+        {publishedCategories().map((category, i) => {
           const count = getByCategory(category.slug).length;
           return (
             <Reveal key={category.slug} delay={i * 110}>

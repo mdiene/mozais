@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Mail, MapPin, Phone } from "lucide-react";
 import { Logo } from "@/components/brand/Logo";
-import { CATEGORIES } from "@/lib/products";
+import { publishedCategories } from "@/lib/products";
 import { NewsletterForm } from "@/components/layout/NewsletterForm";
 
 const MAISON = [
@@ -74,7 +74,7 @@ export function Footer() {
           </div>
 
           <FooterColumn title="Collections">
-            {CATEGORIES.map((c) => (
+            {publishedCategories().map((c) => (
               <FooterLink key={c.slug} href={`/boutique?categorie=${c.slug}`}>
                 {c.name}
               </FooterLink>

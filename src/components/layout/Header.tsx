@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import { Menu, X } from "lucide-react";
 import { Logo } from "@/components/brand/Logo";
 import { CartButton } from "@/components/commerce/CartButton";
-import { CATEGORIES } from "@/lib/products";
+import { publishedCategories } from "@/lib/products";
 import { cn } from "@/lib/utils";
 
 const NAV = [
@@ -162,7 +162,7 @@ export function Header() {
 
           <div className="mt-8 flex flex-col gap-4">
             <p className="eyebrow text-gold/70">Collections</p>
-            {CATEGORIES.map((c) => (
+            {publishedCategories().map((c) => (
               <Link
                 key={c.slug}
                 href={`/boutique?categorie=${c.slug}`}

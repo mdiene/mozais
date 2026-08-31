@@ -8,7 +8,17 @@ export type CategorySlug =
   | "savons"
   | "skincare"
   | "capillaire"
-  | "huiles";
+  // Univers Huiles & Soins Body — remplace l'ancienne catégorie "huiles",
+  // fusionnée ici en deux rayons distincts (voir la feuille de route,
+  // décision du 30/08/2026 : deux libellés concurrents auraient fait
+  // doublon aux yeux d'une cliente).
+  | "huiles-essentielles"
+  | "huiles-bien-etre"
+  | "soins-regeneration"
+  // Univers Senteurs — nouveau, aucun produit publié pour l'instant.
+  | "bougies"
+  | "parfums-ambiance"
+  | "encens";
 
 export type Category = {
   slug: CategorySlug;
@@ -16,6 +26,13 @@ export type Category = {
   /** Intitulé long utilisé en tête de collection. */
   title: string;
   blurb: string;
+  /**
+   * Masque la catégorie de la navigation, du pied de page, des facettes
+   * boutique et du sitemap tant qu'elle n'a pas au moins deux produits —
+   * le seuil retenu le 30/08/2026 est un plancher, pas une cible. Absent
+   * ou `true` = publiée. Voir `publishedCategories()`.
+   */
+  published?: boolean;
 };
 
 export const CATEGORIES: Category[] = [
@@ -41,13 +58,93 @@ export const CATEGORIES: Category[] = [
       "Cuir chevelu assaini, longueurs nourries, boucles définies. Pour cheveux crépus, frisés et locksés.",
   },
   {
-    slug: "huiles",
+    slug: "huiles-essentielles",
     name: "Huiles essentielles",
-    title: "Huiles & élixirs",
+    title: "Huiles essentielles",
     blurb:
-      "Baobab, ricin noir, neem, karité. Pressées à froid, sans dilution ni parfum de synthèse.",
+      "Concentrés à diluer, jamais purs sur la peau. Puissants — à respecter, pas à improviser.",
+  },
+  {
+    slug: "huiles-bien-etre",
+    name: "Huiles de bien-être",
+    title: "Huiles de bien-être",
+    blurb:
+      "Huiles corps et visage prêtes à l'emploi, pressées à froid. Baobab, ricin, sésame.",
+  },
+  {
+    slug: "soins-regeneration",
+    name: "Soins de régénération corporelle",
+    title: "Soins de régénération corporelle",
+    blurb:
+      "Baumes et beurres corps, pour les peaux marquées ou en réparation.",
+    published: false, // aucun produit encore — rayon vierge, voir la feuille de route.
+  },
+  {
+    slug: "bougies",
+    name: "Bougies parfumées",
+    title: "Bougies parfumées",
+    blurb:
+      "Cire végétale, mèche en coton, coulées en petits lots à Dakar — même logique de production que les savons.",
+    published: false,
+  },
+  {
+    slug: "parfums-ambiance",
+    name: "Parfums d'ambiance",
+    title: "Parfums d'ambiance & d'intérieur",
+    blurb: "Brumes et sprays sans flamme, pour parfumer un intérieur en un geste.",
+    published: false,
+  },
+  {
+    slug: "encens",
+    name: "Encens et essences",
+    title: "Encens et essences sur charbon",
+    blurb:
+      "Résines et bâtonnets, brûlés sur charbon — le geste rituel le plus proche de ceux déjà sur le site.",
+    published: false,
   },
 ];
+
+/**
+ * Catégories prêtes à être montrées en navigation, facettes et sitemap.
+ * Utilisée par tout composant qui liste des catégories publiquement —
+ * `CATEGORIES` reste la source complète pour que le nom et le descriptif
+ * d'un rayon existent déjà avant son ouverture.
+ */
+export function publishedCategories() {
+  return CATEGORIES.filter((c) => c.published !== false);
+}
+
+/* ---------- Univers ---------- */
+
+export type UniverseSlug = "soins" | "huiles-soins-body" | "senteurs";
+
+export type Universe = {
+  slug: UniverseSlug;
+  name: string;
+  categories: CategorySlug[];
+};
+
+export const UNIVERSES: Universe[] = [
+  {
+    slug: "soins",
+    name: "Soins visage & corps",
+    categories: ["savons", "skincare", "capillaire"],
+  },
+  {
+    slug: "huiles-soins-body",
+    name: "Huiles & Soins Body",
+    categories: ["huiles-essentielles", "huiles-bien-etre", "soins-regeneration"],
+  },
+  {
+    slug: "senteurs",
+    name: "Senteurs",
+    categories: ["bougies", "parfums-ambiance", "encens"],
+  },
+];
+
+export function getUniverseForCategory(slug: CategorySlug) {
+  return UNIVERSES.find((u) => u.categories.includes(slug));
+}
 
 export type Variant = {
   id: string;
@@ -107,6 +204,19 @@ export type Product = {
   featured?: boolean;
   /** Badge éditorial affiché sur la vignette. */
   badge?: string;
+  /**
+   * Photo de geste insérée en interstitiel sur la fiche produit, entre les
+   * actifs et le rituel. Facultatif : seuls les produits qui en disposent
+   * l'affichent, pas de gabarit générique pour tous.
+   */
+  lifestyle?: { image: string; alt: string; caption: string };
+  /**
+   * Avertissements d'usage, affichés à part du rituel dans un encart
+   * distinct (accordéon) — jamais mélangés aux étapes du geste quotidien.
+   * Réservé aux produits qui en ont réellement besoin (concentrés à
+   * diluer, contre-indications) : absent partout ailleurs.
+   */
+  precautions?: string[];
 };
 
 export const PRODUCTS: Product[] = [
@@ -119,6 +229,12 @@ export const PRODUCTS: Product[] = [
     tone: "linen",
     featured: true,
     badge: "Best-seller",
+    lifestyle: {
+      image: "/editorial/geste-mousse.jpg",
+      alt: "Deux mains à la peau mate font mousser le savon MOZAIS Perfect Skin entre les paumes, sur un fond de marbre émeraude.",
+      caption:
+        "« On la travaille dans les mains, jamais en frottant le pain à même la peau. »",
+    },
     description:
       "Le pain fondateur de la maison. Extraits de plantes et soufre purifiant, coulés dans une base saponifiée à froid qui nettoie sans décaper. Il resserre le grain de peau, assèche les boutons installés et estompe progressivement les marques post-acné, sans l'effet tiraillé des savons dermatologiques classiques.",
     skinConcerns: ["Imperfections", "Excès de sébum", "Marques post-acné"],
@@ -372,7 +488,7 @@ export const PRODUCTS: Product[] = [
     slug: "huile-baobab",
     name: "Huile de Baobab",
     tagline: "Élixir corps & visage, pression à froid",
-    category: "huiles",
+    category: "huiles-bien-etre",
     image: "/products/huile-baobab.svg",
     tone: "gold",
     featured: true,
@@ -484,7 +600,7 @@ export const PRODUCTS: Product[] = [
     name: "Masque Fondant Karité & Baobab",
     tagline: "Nutrition profonde pour cheveux crépus",
     category: "capillaire",
-    image: "/products/masque-karite-baobab.svg",
+    image: "/products/masque-karite-baobab.jpg",
     tone: "linen",
     description:
       "Une texture beurre qui fond à la chaleur des mains. Conçu pour les cheveux 4A à 4C, les cheveux colorés et les longueurs abîmées par la chaleur. Il redonne du glissement au démêlage et de la définition à la boucle, sans silicone.",
@@ -527,7 +643,7 @@ export const PRODUCTS: Product[] = [
     slug: "huile-essentielle-neem",
     name: "Huile Essentielle de Neem",
     tagline: "Concentré purifiant, à diluer",
-    category: "huiles",
+    category: "huiles-essentielles",
     image: "/products/huile-essentielle-neem.svg",
     tone: "emerald",
     description:
@@ -541,9 +657,12 @@ export const PRODUCTS: Product[] = [
       },
     ],
     ritual: [
-      { title: "Toujours diluer", detail: "Trois gouttes maximum dans une cuillère d'huile de baobab." },
-      { title: "Tester au pli du coude", detail: "48 heures avant la première application sur le visage." },
       { title: "En cure courte", detail: "Dix jours, puis pause. Le neem n'est pas un soin d'entretien quotidien." },
+    ],
+    precautions: [
+      "Toujours diluer : trois gouttes maximum dans une cuillère d'huile de baobab, jamais pur sur la peau.",
+      "Tester au pli du coude 48 heures avant toute première application sur le visage.",
+      "Déconseillé pendant la grossesse et l'allaitement, sauf avis médical.",
     ],
     variants: [{ id: "30ml", label: "30 ml", price: 9500, inStock: true }],
     reviews: [
