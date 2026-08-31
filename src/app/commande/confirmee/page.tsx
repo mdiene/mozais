@@ -36,7 +36,7 @@ export default async function ConfirmeePage({
 
   return (
     <div className="mx-auto max-w-3xl px-5 py-24 text-center md:py-32">
-      <LotusMark className="mx-auto w-14 text-gold" />
+      <LotusMark className="mx-auto w-14" />
 
       <p className="eyebrow mt-8">Commande enregistrée</p>
       <h1 className="mt-4 font-display text-[clamp(2.4rem,5.5vw,4rem)] font-light leading-[1] text-emerald-deep text-balance">

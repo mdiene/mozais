@@ -1,49 +1,44 @@
+import Image from "next/image";
 import { cn } from "@/lib/utils";
 
 /**
- * Marque MOZAIS — lotus-flamme.
- * Trois flammes centrales pleines, deux pétales extérieurs en arc.
- * Hérite de `currentColor`, donc se pose en or sur crème comme en
- * crème sur émeraude.
+ * Marque MOZAIS — lotus-flamme, détourée depuis les fichiers logo
+ * officiels (public/brand/lotus-gold.png, lotus-black.png ; voir
+ * scripts/cutout-logo.mjs). Un PNG à canal alpha ne suit pas
+ * `currentColor` comme le faisait l'ancien tracé SVG dessiné à la
+ * main — la couleur se choisit donc via `variant`, pas via une
+ * classe `text-*` sur un parent.
+ *
+ * Dans tout le site sauf mention contraire, c'est la version or qui
+ * est utilisée — y compris dans l'en-tête, qui affichait jusqu'ici la
+ * marque en vert émeraude : harmonisé avec le footer et le menu
+ * mobile, qui étaient déjà en or.
  */
-export function LotusMark({ className }: { className?: string }) {
-  return (
-    <svg
-      viewBox="0 0 200 152"
-      role="img"
-      aria-label="Lotus MOZAIS"
-      className={cn("h-auto w-full", className)}
-      fill="none"
-    >
-      {/* Pétales extérieurs — arcs effilés */}
-      <path
-        d="M26 66 C 30 108, 60 134, 96 138"
-        stroke="currentColor"
-        strokeWidth="13"
-        strokeLinecap="round"
-        fill="none"
-      />
-      <path
-        d="M174 66 C 170 108, 140 134, 104 138"
-        stroke="currentColor"
-        strokeWidth="13"
-        strokeLinecap="round"
-        fill="none"
-      />
+const SOURCES = {
+  gold: "/brand/lotus-gold.png",
+  black: "/brand/lotus-black.png",
+} as const;
 
-      {/* Flammes intérieures */}
-      <g fill="currentColor">
-        <path
-          d="M100 8 C 116 38, 122 62, 116 86 C 112 104, 100 118, 100 118 C 100 118, 88 104, 84 86 C 78 62, 84 38, 100 8 Z"
-          transform="rotate(-34 100 122)"
-        />
-        <path
-          d="M100 8 C 116 38, 122 62, 116 86 C 112 104, 100 118, 100 118 C 100 118, 88 104, 84 86 C 78 62, 84 38, 100 8 Z"
-          transform="rotate(34 100 122)"
-        />
-        <path d="M100 4 C 118 36, 125 64, 118 90 C 113 110, 100 126, 100 126 C 100 126, 87 110, 82 90 C 75 64, 82 36, 100 4 Z" />
-      </g>
-    </svg>
+// Proportions réelles du fichier détouré (~1.24:1) — sert uniquement
+// au calcul d'aspect-ratio de next/image ; la taille affichée est
+// pilotée par la classe passée en `className` (w-*, h-auto).
+const INTRINSIC = { width: 413, height: 334 };
+
+export function LotusMark({
+  className,
+  variant = "gold",
+}: {
+  className?: string;
+  variant?: keyof typeof SOURCES;
+}) {
+  return (
+    <Image
+      src={SOURCES[variant]}
+      alt="Lotus MOZAIS"
+      width={INTRINSIC.width}
+      height={INTRINSIC.height}
+      className={cn("h-auto w-full", className)}
+    />
   );
 }
 
@@ -55,10 +50,12 @@ export function Logo({
   className,
   stacked = false,
   showMark = true,
+  variant = "gold",
 }: {
   className?: string;
   stacked?: boolean;
   showMark?: boolean;
+  variant?: keyof typeof SOURCES;
 }) {
   return (
     <span
@@ -68,7 +65,7 @@ export function Logo({
         className,
       )}
     >
-      {showMark && <LotusMark className={stacked ? "w-12" : "w-6"} />}
+      {showMark && <LotusMark variant={variant} className={stacked ? "w-12" : "w-6"} />}
       <span
         className="font-display leading-none"
         style={{ letterSpacing: "0.22em", fontWeight: 300 }}

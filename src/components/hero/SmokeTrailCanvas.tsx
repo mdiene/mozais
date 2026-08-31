@@ -6,21 +6,24 @@ import { cn } from "@/lib/utils";
 /* ============================================================
    SmokeTrailCanvas — volute d'encens réactive au curseur.
 
-   Sœur de SoapFoamCanvas.tsx : même moteur (particules, curseur à
-   inertie, pause hors écran), physique différente. La mousse
-   s'accumule autour d'un socle ; la fumée, elle, ne fait que monter
-   et se dissiper — pas d'accumulation, pas de répulsion entre
-   particules (la fumée ne se repousse pas comme des bulles), une
-   dérive latérale qui s'amplifie avec l'altitude pour lire comme une
-   volute plutôt qu'une pluie de points qui remonte en ligne droite.
+   Deuxième version : la première étirait chaque particule le long de
+   son vecteur vitesse, pensant qu'une bulle ronde ne pouvait pas lire
+   comme de la fumée. À l'usage c'était l'inverse — les filets orientés
+   avaient l'air de traits, pas de fumée. Un repère fourni (un simple
+   dégradé radial qui grossit et s'efface, sans rotation ni étirement)
+   a montré que le réalisme vient d'ailleurs : des ronds nombreux, très
+   doux, qui grossissent lentement et se recouvrent. On y revient ici,
+   en gardant du premier jet ce qui restait juste : le filet d'ambiance
+   continu, l'émission proportionnelle au geste, la pause hors écran.
 
-   Physique :
-   — un filet d'ambiance monte en continu depuis la base (un bâtonnet
-     ou un charbon hors champ) ;
-   — passer le curseur dans la scène ajoute des volutes le long du
-     geste, comme la main qui trouble la fumée ;
-   — chaque particule accélère en montant, dérive de plus en plus au
-     fil de son ascension, grossit légèrement puis se dissout.
+   Physique, volontairement simple :
+   — chaque volute est un cercle au dégradé très progressif (centre
+     plein, bord totalement transparent), jamais un bord net ;
+   — elle grossit tout au long de sa vie, sans plafond — c'est la
+     diffusion qui fait la fumée, pas la forme ;
+   — elle monte et dérive doucement sur le côté, sans virage brusque ;
+   — beaucoup de volutes superposées, chacune très diaphane : c'est
+     leur recouvrement qui doit lire comme un nuage continu.
    ============================================================ */
 
 type Wisp = {
@@ -29,14 +32,9 @@ type Wisp = {
   vx: number;
   vy: number;
   r: number;
-  rTarget: number;
   age: number;
   life: number;
   hue: number;
-  /** Déphasage de la dérive, pour que rien ne batte à l'unisson. */
-  phase: number;
-  /** Fréquence propre de la dérive — chaque volute ondule à son rythme. */
-  freq: number;
   ambient: boolean;
 };
 
@@ -87,15 +85,12 @@ export function SmokeTrailCanvas({
 
     /* ---------- Réglages ---------- */
     const isCoarse = window.matchMedia("(pointer: coarse)").matches;
-    // Chaque filet est très diaphane (voir draw()) : il en faut beaucoup
-    // en superposition pour lire comme une volute continue plutôt que
-    // comme des traits épars.
-    const MAX = Math.round((isCoarse ? 150 : 320) * density);
-    const AMBIENT_RATE = (isCoarse ? 4 : 6) * density;
+    const MAX = Math.round((isCoarse ? 90 : 170) * density);
+    const AMBIENT_RATE = (isCoarse ? 3 : 4.5) * density;
 
     const wisps: Wisp[] = [];
 
-    /* ---------- Curseur à inertie (identique à SoapFoamCanvas) ---------- */
+    /* ---------- Curseur à inertie ---------- */
     const target = { x: w * focus.x, y: h * focus.y, active: false };
     const pointer = { x: target.x, y: target.y, vx: 0, vy: 0, speed: 0 };
 
@@ -122,64 +117,48 @@ export function SmokeTrailCanvas({
     /* ---------- Fabrique de volutes ---------- */
     const spawn = (x: number, y: number, energy: number, ambient = false) => {
       if (wisps.length >= MAX) return;
-      const rTarget = ambient ? 4 + Math.random() * 10 : 3 + Math.random() * (6 + energy * 9);
 
       wisps.push({
-        x: x + (Math.random() - 0.5) * (ambient ? 10 : 22),
-        y: y + (Math.random() - 0.5) * 8,
-        vx: (Math.random() - 0.5) * 0.3 + (ambient ? 0 : pointer.vx * 0.08),
-        // Monte toujours : vitesse verticale initiale négative.
-        vy: -(0.25 + Math.random() * 0.35) - (ambient ? 0 : energy * 0.3),
-        r: rTarget * 0.25,
-        rTarget,
+        x: x + (Math.random() - 0.5) * (ambient ? 12 : 20),
+        y: y + (Math.random() - 0.5) * 10,
+        // Dérive latérale légère et constante — pas de virage, juste
+        // un léger désaxement, comme de l'air qui n'est jamais parfaitement
+        // immobile.
+        vx: (Math.random() - 0.5) * 0.5,
+        // Monte toujours, lentement — la vitesse ne s'emballe pas.
+        vy: -(0.35 + Math.random() * 0.4) - (ambient ? 0 : energy * 0.25),
+        r: (ambient ? 10 : 8) + Math.random() * (ambient ? 14 : 12 + energy * 10),
         age: 0,
-        life: ambient ? 4.5 + Math.random() * 3.5 : 2.6 + Math.random() * 2.2,
-        // Gris-ambré : de la braise (28°) au gris-fumée neutre (24°, faible saturation).
-        hue: 26 + Math.random() * 14,
-        phase: Math.random() * TAU,
-        freq: 0.6 + Math.random() * 0.9,
+        life: ambient ? 5 + Math.random() * 3.5 : 3.2 + Math.random() * 2.4,
+        // Gris-ambré très désaturé — proche du repère fourni (blanc-gris),
+        // teinté juste assez pour rester dans la gamme de la maison.
+        hue: 30 + Math.random() * 12,
         ambient,
       });
     };
 
     /* ---------- Rendu d'une volute ----------
-       Une bulle est ronde et nette ; la fumée est un filet allongé dans
-       le sens où l'air la pousse. Chaque particule est donc étirée le
-       long de son propre vecteur vitesse — jamais un simple cercle
-       agrandi — et reste très diaphane : c'est la superposition de
-       nombreux filets fins qui doit lire comme une volute continue,
-       pas la présence d'un seul filet épais. */
+       Un seul dégradé radial, sans rotation ni étirement : un centre
+       plein qui se perd très progressivement vers la transparence.
+       C'est la multiplication de cercles très doux qui se recouvrent
+       qui donne l'impression de nuage, pas la forme de chacun. */
     const draw = (wisp: Wisp) => {
       const t = wisp.age / wisp.life;
-      // Apparition rapide, dissolution longue — la fumée s'efface en
-      // s'étirant, elle ne disparaît jamais d'un coup.
-      const alpha = t < 0.12 ? t / 0.12 : t > 0.4 ? 1 - (t - 0.4) / 0.6 : 1;
-      const a = Math.max(0, Math.min(1, alpha)) * (wisp.ambient ? 0.16 : 0.22);
-      if (a <= 0.006 || wisp.r < 0.4) return;
+      // Apparition rapide, dissolution longue.
+      const alpha = t < 0.15 ? t / 0.15 : t > 0.35 ? 1 - (t - 0.35) / 0.65 : 1;
+      const a = Math.max(0, Math.min(1, alpha)) * (wisp.ambient ? 0.22 : 0.3);
+      if (a <= 0.006 || wisp.r < 0.5) return;
 
       const { x, y, r } = wisp;
-
-      // Orientation le long du déplacement réel — c'est ce qui fait
-      // « couler » la fumée au lieu de la laisser flotter en rond.
-      const speed = Math.hypot(wisp.vx, wisp.vy);
-      const angle = speed > 0.015 ? Math.atan2(wisp.vy, wisp.vx) : -Math.PI / 2;
-      // Plus le filet va vite, plus il s'étire — jusqu'à 4x son rayon.
-      const stretch = 1.6 + Math.min(speed * 3.4, 2.8);
-
-      ctx.save();
-      ctx.translate(x, y);
-      ctx.rotate(angle + Math.PI / 2);
-
-      const body = ctx.createRadialGradient(0, 0, 0, 0, 0, r * stretch);
-      body.addColorStop(0, `hsla(${wisp.hue}, 18%, 90%, ${a})`);
-      body.addColorStop(0.4, `hsla(${wisp.hue}, 14%, 80%, ${a * 0.5})`);
-      body.addColorStop(1, `hsla(${wisp.hue}, 8%, 65%, 0)`);
+      const body = ctx.createRadialGradient(x, y, 0, x, y, r);
+      body.addColorStop(0, `hsla(${wisp.hue}, 14%, 92%, ${a})`);
+      body.addColorStop(0.35, `hsla(${wisp.hue}, 12%, 86%, ${a * 0.7})`);
+      body.addColorStop(0.7, `hsla(${wisp.hue}, 10%, 78%, ${a * 0.28})`);
+      body.addColorStop(1, `hsla(${wisp.hue}, 8%, 70%, 0)`);
       ctx.fillStyle = body;
-
       ctx.beginPath();
-      ctx.ellipse(0, 0, r * 0.5, r * stretch, 0, 0, TAU);
+      ctx.arc(x, y, r, 0, TAU);
       ctx.fill();
-      ctx.restore();
     };
 
     /* ---------- Boucle ---------- */
@@ -214,7 +193,7 @@ export function SmokeTrailCanvas({
          le geste quand le curseur est dans la scène. */
       if (!reduceMotion) {
         const energy = Math.min(pointer.speed / 22, 1);
-        const rate = AMBIENT_RATE + (target.active ? energy * 30 : 0);
+        const rate = AMBIENT_RATE + (target.active ? energy * 22 : 0);
         emitCarry += rate * dt;
         while (emitCarry >= 1) {
           emitCarry -= 1;
@@ -236,28 +215,14 @@ export function SmokeTrailCanvas({
           continue;
         }
 
-        wisp.r += (wisp.rTarget - wisp.r) * Math.min(1, dt * 5);
-        // Diffusion : grossit doucement tout au long de la montée, mais
-        // plafonne — l'élongation (voir draw()) fait le reste du travail
-        // visuel, un rayon trop grand redonnerait un rond, pas un filet.
-        wisp.r = Math.min(wisp.r + dt * 1.6, wisp.rTarget * 1.8);
+        // Diffusion continue, sans plafond — la fumée s'étale tant
+        // qu'elle existe, elle ne s'arrête pas de grandir en chemin.
+        wisp.r += dt * (wisp.ambient ? 5 : 7);
 
-        const t = wisp.age / wisp.life;
-
-        // Accélère en montant — l'air chaud prend de la vitesse.
-        wisp.vy -= (0.35 + t * 0.5) * dt;
-
-        // Dérive latérale qui s'amplifie avec l'altitude parcourue :
-        // c'est ce qui fait « onduler » la volute plutôt que monter
-        // droit comme une colonne de bulles.
-        const drift = Math.sin(now * 0.0009 * wisp.freq + wisp.phase) * (0.5 + t * 1.8);
-        wisp.vx += drift * dt * 6;
-
-        // Amortissement — la fumée d'ambiance se disperse plus vite
-        // que la traînée tirée par le geste.
-        const drag = wisp.ambient ? 0.985 : 0.99;
-        wisp.vx *= drag;
-        wisp.vy *= drag;
+        // Amortissement doux — la vitesse ne s'emballe jamais, elle se
+        // stabilise, comme un filet qui monte à rythme presque constant.
+        wisp.vx *= 0.99;
+        wisp.vy *= 0.995;
 
         wisp.x += wisp.vx;
         wisp.y += wisp.vy;
@@ -273,13 +238,11 @@ export function SmokeTrailCanvas({
       ctx.clearRect(0, 0, w, h);
       const fx0 = w * focus.x;
       const fy0 = h * focus.y;
-      for (let i = 0; i < 18; i++) {
-        const a = Math.random() * TAU;
-        spawn(fx0 + Math.cos(a) * 6, fy0 - i * (h * 0.03) - Math.random() * 10, 0, true);
+      for (let i = 0; i < 14; i++) {
+        spawn(fx0 + (Math.random() - 0.5) * 16, fy0 - i * (h * 0.035) - Math.random() * 10, 0, true);
       }
       for (const wisp of wisps) {
-        wisp.r = wisp.rTarget;
-        wisp.age = wisp.life * 0.35;
+        wisp.age = wisp.life * 0.3;
         draw(wisp);
       }
     } else {

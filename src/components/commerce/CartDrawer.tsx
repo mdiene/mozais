@@ -231,7 +231,7 @@ export function CartDrawer() {
 function EmptyCart({ onClose }: { onClose: () => void }) {
   return (
     <div className="flex h-full flex-col items-center justify-center py-16 text-center">
-      <LotusMark className="w-12 text-gold/35" />
+      <LotusMark className="w-12 opacity-[0.35]" />
       <p className="mt-6 font-display text-2xl font-light text-earth">
         Votre panier est vide
       </p>

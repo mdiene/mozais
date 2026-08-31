@@ -5,7 +5,7 @@ import { LotusMark } from "@/components/brand/Logo";
 export default function NotFound() {
   return (
     <div className="mx-auto flex min-h-[70vh] max-w-2xl flex-col items-center justify-center px-5 py-24 text-center">
-      <LotusMark className="w-14 text-gold/40" />
+      <LotusMark className="w-14 opacity-[0.4]" />
       <p className="eyebrow mt-8">Erreur 404</p>
       <h1 className="mt-4 font-display text-[clamp(2.4rem,6vw,4rem)] font-light leading-[1] text-emerald-deep text-balance">
         Cette page n&apos;existe pas.

@@ -27,7 +27,7 @@ export function OriginBlock() {
               }}
             />
             <div className="relative">
-              <LotusMark className="mx-auto w-20 text-gold" />
+              <LotusMark className="mx-auto w-20" />
               <p className="mt-8 font-display text-[clamp(1.7rem,3vw,2.4rem)] font-light leading-tight text-linen">
                 Made with love
                 <br />

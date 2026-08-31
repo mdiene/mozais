@@ -91,9 +91,16 @@ export function Header() {
           <Link
             href="/"
             aria-label="MOZAIS, accueil"
-            className="text-emerald-deep transition-opacity hover:opacity-70"
+            className="text-gold transition-opacity hover:opacity-70"
           >
-            <Logo className="text-base tracking-[0.22em] md:text-lg" />
+            {/* Mot-marque agrandi d'un cran (text-lg → text-xl) sans
+                toucher au padding vertical du bandeau (py-4 md:py-5,
+                ci-dessus) : la hauteur du bandeau ne bouge pas.
+                Couleur passée en or pour s'harmoniser avec la vraie
+                marque lotus, qui l'est toujours — plus d'émeraude ici,
+                le seul endroit du site qui différait du footer et du
+                menu mobile. */}
+            <Logo className="text-lg tracking-[0.22em] md:text-xl" />
           </Link>
 
           {/* Droite */}

@@ -68,7 +68,7 @@ export default function MaisonPage() {
           }}
         />
         <div className="relative mx-auto max-w-[1440px] px-5 md:px-10">
-          <LotusMark className="w-14 text-gold" />
+          <LotusMark className="w-14" />
           <h1 className="mt-8 max-w-4xl font-display text-[clamp(2.6rem,6.4vw,5rem)] font-light leading-[0.96] text-emerald-deep text-balance">
             Née d&apos;un refus : celui des savons éclaircissants.
           </h1>

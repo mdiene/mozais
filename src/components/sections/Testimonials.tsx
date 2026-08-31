@@ -19,7 +19,7 @@ export function Testimonials() {
     <section className="border-y border-earth/10 bg-linen-deep py-24 md:py-32">
       <div className="mx-auto max-w-[1440px] px-5 md:px-10">
         <Reveal className="flex flex-col items-center text-center">
-          <LotusMark className="w-10 text-gold" />
+          <LotusMark className="w-10" />
           <p className="eyebrow mt-6">Elles l&apos;ont adopté</p>
           <h2 className="mt-4 max-w-2xl font-display text-[clamp(2rem,4vw,3.2rem)] font-light leading-[1.05] text-emerald-deep text-balance">
             312 avis vérifiés, une moyenne de 4,8 sur 5.
