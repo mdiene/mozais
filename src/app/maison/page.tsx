@@ -58,6 +58,22 @@ const ENGAGEMENTS = [
 export default function MaisonPage() {
   return (
     <>
+      {/* Bannière fondatrice — image fournie telle quelle, pleine largeur,
+          sans recadrage : le cadre et la citation sont déjà composés dans
+          le fichier. En tout premier sur la page : c'est elle qui porte
+          l'histoire, avant même le titre. */}
+      <div className="relative w-full">
+        <Image
+          src="/maison/portrait-fondatrice-citation.jpg"
+          alt="Aminata Louise Somé, fondatrice de MOZAIS : « J'ai grandi entourée de femmes qui transformaient le karité de leurs mains, sans que ce savoir soit jamais reconnu à sa valeur. MOZAIS est né de ce constat : la beauté africaine n'a besoin d'aucune promesse d'éclaircir pour être vue. Mon combat, c'est de rendre à ces femmes — et à cette peau — la place qui leur revient. »"
+          width={1024}
+          height={509}
+          priority
+          sizes="100vw"
+          className="h-auto w-full"
+        />
+      </div>
+
       {/* En-tête */}
       <header className="relative overflow-hidden bg-linen py-20 md:py-28">
         <div
@@ -81,56 +97,8 @@ export default function MaisonPage() {
         </div>
       </header>
 
-      {/* Fondatrice — portrait et parole d'Aminata Louise Somé. Placée
-          juste après l'en-tête, avant la chronologie : on présente
-          d'abord qui porte l'histoire, avant de la raconter en dates. */}
-      <section className="border-t border-earth/10 bg-linen py-20 md:py-28">
-        <div className="mx-auto max-w-[1440px] px-5 md:px-10">
-          <div className="grid gap-12 lg:grid-cols-[1fr_1.1fr] lg:items-center lg:gap-20">
-            <Reveal>
-              <div className="relative aspect-4/3 overflow-hidden bg-emerald-deep">
-                <Image
-                  src="/maison/portrait-fondatrice.jpg"
-                  alt="Aminata Louise Somé, fondatrice de MOZAIS"
-                  fill
-                  sizes="(min-width: 1024px) 44vw, 90vw"
-                  className="object-cover"
-                />
-              </div>
-            </Reveal>
-
-            <Reveal delay={120}>
-              <p className="eyebrow">La fondatrice</p>
-              <div className="relative mt-7">
-                <span
-                  aria-hidden="true"
-                  className="pointer-events-none absolute -left-8 -top-7 select-none font-display text-[4.5rem] leading-none text-gold/25 md:-left-14 md:-top-9 md:text-[6.5rem]"
-                >
-                  «
-                </span>
-                <blockquote className="relative font-display text-[clamp(1.55rem,2.9vw,2.15rem)] font-light leading-[1.32] text-emerald-deep text-pretty">
-                  J&apos;ai grandi entourée de femmes qui transformaient le
-                  karité de leurs mains, sans que ce savoir soit jamais
-                  reconnu à sa valeur. MOZAIS est né de ce constat : la
-                  beauté africaine n&apos;a besoin d&apos;aucune promesse
-                  d&apos;éclaircir pour être vue. Mon combat, c&apos;est de
-                  rendre à ces femmes — et à cette peau — la place qui leur
-                  revient.
-                </blockquote>
-              </div>
-              <p className="mt-8 text-[13px] font-medium uppercase tracking-[0.2em] text-earth">
-                Aminata Louise Somé
-                <span className="ml-2 font-normal normal-case tracking-normal text-earth-muted">
-                  — Fondatrice de MOZAIS
-                </span>
-              </p>
-            </Reveal>
-          </div>
-        </div>
-      </section>
-
       {/* Chronologie */}
-      <section className="mx-auto max-w-[1440px] px-5 pb-8 pt-4 md:px-10 md:pt-6">
+      <section className="mx-auto max-w-[1440px] px-5 pb-8 md:px-10">
         <div className="grid gap-px bg-earth/10 lg:grid-cols-4">
           {CHAPTERS.map((chapter, i) => (
             <Reveal key={chapter.year} delay={i * 100} className="bg-linen p-8 lg:p-9">
