@@ -8,8 +8,8 @@ import { getByCategory, publishedCategories } from "@/lib/products";
 /**
  * Visuel de tête par collection — la première fiche de la catégorie.
  * L'ancienne entrée "huiles" est devenue deux catégories (fusion du
- * 30/08/2026) : la grille passe donc de 4 à 5 tuiles ici, seul effet
- * visible de la phase 2 — tout le reste du site est inchangé.
+ * 30/08/2026), et Senteurs ouvre ses deux premiers rayons le
+ * 31/08/2026 : la grille passe de 4 à 7 tuiles au total.
  */
 const COVER: Record<string, string> = {
   savons: "/products/hydra-karite-miel.jpg",
@@ -17,6 +17,8 @@ const COVER: Record<string, string> = {
   capillaire: "/products/elixir-neem-ricin.svg",
   "huiles-essentielles": "/products/huile-essentielle-neem.svg",
   "huiles-bien-etre": "/products/huile-baobab.svg",
+  bougies: "/products/bougie-vetiver-fume.jpg",
+  "parfums-ambiance": "/products/parfum-rose-de-saba.jpg",
 };
 
 export function CollectionsGrid() {

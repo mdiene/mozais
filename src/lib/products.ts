@@ -85,14 +85,14 @@ export const CATEGORIES: Category[] = [
     title: "Bougies parfumées",
     blurb:
       "Cire végétale, mèche en coton, coulées en petits lots à Dakar — même logique de production que les savons.",
-    published: false,
+    // Publiée le 31/08/2026 : 2 références prêtes (seuil minimum atteint).
   },
   {
     slug: "parfums-ambiance",
     name: "Parfums d'ambiance",
     title: "Parfums d'ambiance & d'intérieur",
     blurb: "Brumes et sprays sans flamme, pour parfumer un intérieur en un geste.",
-    published: false,
+    // Publiée le 31/08/2026 : 2 références prêtes (seuil minimum atteint).
   },
   {
     slug: "encens",
@@ -719,6 +719,159 @@ export const PRODUCTS: Product[] = [
         verified: true,
       },
     ],
+  },
+
+  /* ============================================================
+     Univers Senteurs — premières références, ajoutées le 31/08/2026.
+     Deux sous-catégories seulement (Bougies, Parfums d'ambiance) :
+     Encens reste fermée, faute d'un second visuel exploitable —
+     voir la feuille de route, seuil de 2 produits minimum.
+     ============================================================ */
+  {
+    slug: "bougie-choses-simples",
+    name: "Les Choses Simples",
+    line: "Bougies MOZAIS",
+    tagline: "Bougie parfumée trois mèches — senteur des beaux jours",
+    category: "bougies",
+    image: "/products/bougie-choses-simples.jpg",
+    tone: "gold",
+    featured: true,
+    description:
+      "Coulée dans un verre ambré, trois mèches pour une diffusion large sans qu'aucune ne noie les autres. Le label dessiné à la plume évoque un jardin de fin d'été — la senteur suit : foin coupé, fleurs sauvages, une pointe de miel.",
+    skinConcerns: ["Ambiance chaleureuse", "Soirée", "Ne charbonne pas"],
+    actives: [
+      { name: "Cire de soja", role: "Combustion propre, sans suie ni composés volatils inutiles." },
+      {
+        name: "Trois mèches en coton",
+        role: "Diffusion homogène sur toute la largeur du verre, sans tunnel.",
+      },
+      {
+        name: "Huile parfumée dosée à 8 %",
+        role: "Assez concentrée pour tenir la pièce sans devenir entêtante.",
+      },
+    ],
+    ritual: [
+      {
+        title: "Première combustion : deux heures",
+        detail:
+          "Laisser la cire fondre jusqu'aux bords du verre avant d'éteindre — sinon elle garde son premier diamètre et creuse un tunnel pour toujours.",
+      },
+      {
+        title: "Couper la mèche à 5 mm",
+        detail:
+          "Avant chaque allumage suivant, une fois la cire refroidie. Une mèche trop longue noircit le verre et fait fumer la flamme.",
+      },
+      {
+        title: "Quatre heures maximum",
+        detail:
+          "Laisser refroidir au moins deux heures entre deux combustions — la cire liquide en surface a besoin de se figer.",
+      },
+    ],
+    precautions: [
+      "Ne jamais laisser une bougie allumée sans surveillance.",
+      "Brûler sur une surface stable, à l'écart des courants d'air, des tissus et de tout objet inflammable.",
+      "Hors de portée des enfants et des animaux.",
+      "Éteindre à 1 cm du fond du verre : ne pas brûler jusqu'au bout.",
+    ],
+    variants: [{ id: "180g", label: "180 g", price: 9500, inStock: true }],
+    reviews: [],
+  },
+  {
+    slug: "bougie-vetiver-fume",
+    name: "Vétiver Fumé",
+    line: "Bougies MOZAIS",
+    tagline: "Bougie parfumée — vétiver boisé et fumé",
+    category: "bougies",
+    image: "/products/bougie-vetiver-fume.jpg",
+    tone: "emerald",
+    featured: true,
+    description:
+      "La plus sombre de la maison. Un vétiver racinaire, fumé, posé sur un fond boisé sec — pensée pour les pièces où l'on reçoit tard. Verre dépoli, mèche unique, combustion lente.",
+    skinConcerns: ["Ambiance chaleureuse", "Soirée", "Registre boisé"],
+    actives: [
+      { name: "Cire de soja", role: "Combustion propre, sans suie ni composés volatils inutiles." },
+      { name: "Vétiver", latin: "Chrysopogon zizanioides", role: "Racine fumée, boisée, la colonne vertébrale du parfum." },
+      { name: "Mèche en bois", role: "Crépite légèrement à la combustion, renforce le registre fumé." },
+    ],
+    ritual: [
+      {
+        title: "Première combustion : deux heures",
+        detail: "Jusqu'aux bords du verre, comme pour toute bougie à mèche large — c'est ce qui évite le tunnel.",
+      },
+      {
+        title: "Couper la mèche à 5 mm",
+        detail: "La mèche en bois s'entretient comme une mèche coton : on la raccourcit, on ne la casse pas.",
+      },
+    ],
+    precautions: [
+      "Ne jamais laisser une bougie allumée sans surveillance.",
+      "Brûler sur une surface stable, à l'écart des courants d'air, des tissus et de tout objet inflammable.",
+      "Hors de portée des enfants et des animaux.",
+    ],
+    variants: [{ id: "180g", label: "180 g", price: 10500, inStock: true }],
+    reviews: [],
+  },
+  {
+    slug: "parfum-rose-de-saba",
+    name: "Rose de Saba",
+    line: "L'Office des Parfums",
+    tagline: "Parfum d'intérieur — linge & maison, 500 ml",
+    category: "parfums-ambiance",
+    image: "/products/parfum-rose-de-saba.jpg",
+    tone: "linen",
+    featured: true,
+    description:
+      "Un format généreux pour vaporiser sans compter — linge de maison, canapés, rideaux, chambres. La rose s'ouvre franche puis s'assagit sur un fond boisé, sans jamais tourner sucré.",
+    skinConcerns: ["Linge & textile", "Chambre", "Ambiance"],
+    actives: [
+      {
+        name: "Alcool parfumé haute concentration",
+        role: "Tient sur le tissu plusieurs heures sans laisser d'auréole.",
+      },
+      { name: "Rose de Damas", role: "Note de cœur florale et ronde, jamais poudrée." },
+      { name: "Bois de cachemire", role: "Fond boisé doux qui prolonge la tenue sur le textile." },
+    ],
+    ritual: [
+      { title: "Vaporiser à 30 cm", detail: "Sur le linge ou le tissu, jamais au contact direct de la peau." },
+      { title: "Laisser sécher à l'air libre", detail: "Avant de replier ou de s'asseoir — quelques minutes suffisent." },
+      {
+        title: "Un passage suffit",
+        detail: "Deux à trois pressions par pièce ; insister n'allonge pas la tenue, ça sature juste l'air.",
+      },
+    ],
+    precautions: [
+      "Tester sur une zone cachée avant d'utiliser sur un tissu délicat (soie, cuir).",
+      "Ne jamais vaporiser à proximité d'une flamme ou d'une source de chaleur.",
+      "Éviter le contact avec les yeux.",
+    ],
+    variants: [{ id: "500ml", label: "500 ml", price: 13500, inStock: true }],
+    reviews: [],
+  },
+  {
+    slug: "parfum-patchouli",
+    name: "Patchouli",
+    line: "L'Office des Parfums",
+    tagline: "Brume & diffuseur, duo pour la maison",
+    category: "parfums-ambiance",
+    image: "/products/parfum-patchouli.jpg",
+    tone: "earth",
+    description:
+      "Le duo qui parfume vite et qui parfume long : la brume pour l'effet immédiat, le diffuseur à bâtonnets pour la diffusion continue les jours suivants. Le patchouli, terreux et chaud, s'installe sans jamais devenir entêtant.",
+    skinConcerns: ["Ambiance", "Diffusion continue", "Pièces de vie"],
+    actives: [
+      { name: "Patchouli", role: "Note de fond terreuse et chaude, la colonne vertébrale du parfum." },
+      { name: "Bâtonnets rotin", role: "Remontent le parfum du flacon en continu, sans flamme ni chaleur." },
+    ],
+    ritual: [
+      { title: "La brume en entrée", detail: "Un passage dans la pièce pour un effet immédiat, en arrivant." },
+      { title: "Le diffuseur en fond", detail: "Retourner les bâtonnets une fois par semaine pour raviver la diffusion." },
+    ],
+    precautions: [
+      "Tenir hors de portée des enfants et des animaux — le flacon du diffuseur n'est pas scellé.",
+      "Ne pas ingérer, ne pas appliquer sur la peau.",
+    ],
+    variants: [{ id: "duo", label: "Duo brume + diffuseur", price: 15500, inStock: true }],
+    reviews: [],
   },
 ];
 

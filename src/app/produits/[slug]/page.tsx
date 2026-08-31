@@ -14,6 +14,8 @@ import {
   fromPrice,
   getCategory,
   getProduct,
+  getUniverseForCategory,
+  type UniverseSlug,
 } from "@/lib/products";
 import { formatPrice, CURRENCY } from "@/lib/utils";
 import { breadcrumbJsonLd } from "@/lib/seo";
@@ -44,12 +46,36 @@ export async function generateMetadata({
   };
 }
 
-const REASSURANCE = [
-  { icon: Truck, label: "Expédié sous 24 h depuis Dakar" },
-  { icon: ShieldCheck, label: "Sans agent éclaircissant, jamais" },
-  { icon: Leaf, label: "Saponifié à froid, sans huile de palme" },
-  { icon: PackageCheck, label: "Numéro de lot sur chaque unité" },
-];
+/**
+ * Réassurance par univers — "saponifié à froid" n'a aucun sens sur une
+ * bougie, et "sans agent éclaircissant" ne veut rien dire pour un parfum
+ * d'ambiance. Une seule liste pour tout le catalogue mentait dès qu'un
+ * produit sortait du soin visage/corps ; elle suit maintenant l'univers
+ * réel du produit (voir `getUniverseForCategory`).
+ */
+const REASSURANCE_BY_UNIVERSE: Record<
+  UniverseSlug,
+  { icon: typeof Truck; label: string }[]
+> = {
+  soins: [
+    { icon: Truck, label: "Expédié sous 24 h depuis Dakar" },
+    { icon: ShieldCheck, label: "Sans agent éclaircissant, jamais" },
+    { icon: Leaf, label: "Saponifié à froid, sans huile de palme" },
+    { icon: PackageCheck, label: "Numéro de lot sur chaque unité" },
+  ],
+  "huiles-soins-body": [
+    { icon: Truck, label: "Expédié sous 24 h depuis Dakar" },
+    { icon: ShieldCheck, label: "Sans agent éclaircissant, jamais" },
+    { icon: Leaf, label: "Sans additif de synthèse" },
+    { icon: PackageCheck, label: "Numéro de lot sur chaque unité" },
+  ],
+  senteurs: [
+    { icon: Truck, label: "Expédié sous 24 h depuis Dakar" },
+    { icon: ShieldCheck, label: "Composé sans phtalates" },
+    { icon: Leaf, label: "Petits lots, formulés à Dakar" },
+    { icon: PackageCheck, label: "Numéro de lot sur chaque unité" },
+  ],
+};
 
 export default async function ProductPage({ params }: { params: Params }) {
   const { slug } = await params;
@@ -57,6 +83,9 @@ export default async function ProductPage({ params }: { params: Params }) {
   if (!product) notFound();
 
   const category = getCategory(product.category);
+  const universe = getUniverseForCategory(product.category);
+  const reassurance =
+    REASSURANCE_BY_UNIVERSE[(universe?.slug ?? "soins") as UniverseSlug];
   const rating = averageRating(product);
   const gallery = product.gallery?.length ? product.gallery : [product.image];
   const related = PRODUCTS.filter(
@@ -222,7 +251,7 @@ export default async function ProductPage({ params }: { params: Params }) {
             <AddToCart product={product} />
 
             <ul className="mt-10 grid gap-3 border-t border-earth/10 pt-7 sm:grid-cols-2">
-              {REASSURANCE.map(({ icon: Icon, label }) => (
+              {reassurance.map(({ icon: Icon, label }) => (
                 <li key={label} className="flex items-start gap-2.5 text-[12.5px] text-earth-soft">
                   <Icon size={15} strokeWidth={1.25} className="mt-0.5 shrink-0 text-gold" />
                   {label}
