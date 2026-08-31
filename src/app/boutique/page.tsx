@@ -13,6 +13,7 @@ import {
   getCategory,
   type Product,
 } from "@/lib/products";
+import { breadcrumbJsonLd, itemListJsonLd } from "@/lib/seo";
 
 export const metadata: Metadata = {
   title: "Boutique",
@@ -61,8 +62,30 @@ export default async function BoutiquePage({
   if (besoin) products = products.filter((p) => p.skinConcerns.includes(besoin));
   products = sortProducts(products, (tri as SortId) ?? "populaire");
 
+  /* Fil d'Ariane et liste ordonnée — mêmes libellés que le <nav> et la
+     grille plus bas, jamais une copie qui pourrait diverger. */
+  const breadcrumb = breadcrumbJsonLd([
+    { name: "Accueil", href: "/" },
+    { name: "Boutique", href: "/boutique" },
+    ...(category
+      ? [{ name: category.name, href: `/boutique?categorie=${category.slug}` }]
+      : []),
+  ]);
+  const itemList = itemListJsonLd(
+    products.map((p) => ({ name: p.name, href: `/produits/${p.slug}`, image: p.image })),
+  );
+
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumb) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(itemList) }}
+      />
+
       {/* En-tête de collection */}
       <header className="relative overflow-hidden bg-linen">
         <div
@@ -135,7 +158,10 @@ export default async function BoutiquePage({
           <div className="grid grid-cols-2 gap-x-5 gap-y-14 md:gap-x-8 lg:grid-cols-3 xl:grid-cols-4">
             {products.map((product, i) => (
               <Reveal key={product.slug} delay={Math.min(i, 6) * 70}>
-                <ProductCard product={product} priority={i < 4} />
+                {/* Un seul candidat LCP par page : prioriser plusieurs
+                    images à la fois dilue le signal au lieu de le
+                    concentrer sur celle qui compte réellement. */}
+                <ProductCard product={product} priority={i === 0} />
               </Reveal>
             ))}
           </div>

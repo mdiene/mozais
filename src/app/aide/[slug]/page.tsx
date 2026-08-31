@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Button } from "@/components/ui/button";
+import { breadcrumbJsonLd } from "@/lib/seo";
 
 type Article = {
   title: string;
@@ -140,8 +141,20 @@ export default async function AidePage({
   const article = ARTICLES[slug];
   if (!article) notFound();
 
+  /* Pas de crumb intermédiaire « Aide » : il n'existe aucune page /aide
+     (seules les fiches /aide/[slug] existent) — un BreadcrumbList ne doit
+     pointer que vers de vraies URL. */
+  const breadcrumb = breadcrumbJsonLd([
+    { name: "Accueil", href: "/" },
+    { name: article.title, href: `/aide/${slug}` },
+  ]);
+
   return (
     <article className="mx-auto max-w-3xl px-5 py-16 md:py-24">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumb) }}
+      />
       <nav aria-label="Fil d'Ariane" className="text-[11px] tracking-[0.14em] text-earth-muted">
         <Link href="/" className="link-draw hover:text-earth">
           Accueil
